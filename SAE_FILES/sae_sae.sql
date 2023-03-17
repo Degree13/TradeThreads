@@ -87,6 +87,14 @@ CREATE TABLE ligne_panier(
     CONSTRAINT fk_vetement_panier FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
+CREATE TABLE favoris(
+    utilisateur_id INT,
+    vetement_id INT,
+    PRIMARY KEY (utilisateur_id, vetement_id),
+    CONSTRAINT fk_utilisateur_favoris FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    CONSTRAINT fk_vetement_favoris FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
+);
+
 # table panier à faire pour une sauvegarde permanente
 # table facturation à faire
 
@@ -181,6 +189,13 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, prix, date_ajout
 (2, 8, 1, 59.99, '2023-01-20'),
 (2, 4, 4, 720, '2023-01-19'),
 (3, 7, 3, 89.97, '2023-01-19');
+
+INSERT INTO favoris(utilisateur_id, vetement_id) VALUES
+(1, 2),
+(1, 13),
+(2, 8),
+(2, 4),
+(3, 7);
 
 # Verif table
 

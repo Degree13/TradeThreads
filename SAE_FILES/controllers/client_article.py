@@ -46,10 +46,30 @@ def client_article_show():                                 # remplace client_ind
                 sql = sql + " or "
             list_param.append(item)
         sql = sql + ")"
-    tuple_sql = tuple(list_param)
 
+    tuple_sql = tuple(list_param)
     mycursor.execute(sql, tuple_sql)
     articles = mycursor.fetchall()
+
+
+    ''' UNION
+                    SELECT NULL AS id_article
+                        , NULL AS nom
+                        , NULL AS stock
+                        , NULL AS prix
+                        , COUNT(vetement_id) AS liste_envie
+                    FROM favoris
+                    WHERE utilisateur_id = %s '''
+    
+    for article in articles:
+        id_article = article['id_article']
+        sql = ''' SELECT COUNT(vetement_id) AS liste_envie
+                    FROM favoris
+                    WHERE utilisateur_id = %s 
+                    AND vetement_id = %s '''
+        mycursor.execute(sql, (id_client, id_article))
+        liste_envie = mycursor.fetchone()
+        article['liste_envie'] = liste_envie['liste_envie']
 
     sql = '''
         SELECT id_type_vetement as id
@@ -83,6 +103,12 @@ def client_article_show():                                 # remplace client_ind
             prix_total += elem["prix_total"]
     else:
         prix_total = None
+
+    # Count the number of favoris
+    #sql = ''' COUNT id_article AS liste_envie FROM favoris WHERE id_client = %s '''
+    #mycursor.execute(sql, (id_client,))
+    #TODO a finir
+
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
                            , articles_panier=articles_panier
