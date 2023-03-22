@@ -1,5 +1,5 @@
 # Suppression tables
-DROP TABLE IF EXISTS  ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
+DROP TABLE IF EXISTS  favoris, ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
 
 # enlevez marque et fournisseur
 # Creation tables
@@ -90,6 +90,7 @@ CREATE TABLE ligne_panier(
 CREATE TABLE favoris(
     utilisateur_id INT,
     vetement_id INT,
+    fav_order INT,
     PRIMARY KEY (utilisateur_id, vetement_id),
     CONSTRAINT fk_utilisateur_favoris FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     CONSTRAINT fk_vetement_favoris FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
@@ -190,12 +191,12 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, prix, date_ajout
 (2, 4, 4, 720, '2023-01-19'),
 (3, 7, 3, 89.97, '2023-01-19');
 
-INSERT INTO favoris(utilisateur_id, vetement_id) VALUES
-(1, 2),
-(1, 13),
-(2, 8),
-(2, 4),
-(3, 7);
+INSERT INTO favoris(utilisateur_id, vetement_id, fav_order) VALUES
+(1, 2, 1),
+(1, 13, 2),
+(2, 8, 1),
+(2, 4, 2),
+(3, 7, 1);
 
 # Verif table
 

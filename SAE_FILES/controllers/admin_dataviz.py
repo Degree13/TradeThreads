@@ -12,9 +12,7 @@ admin_dataviz = Blueprint('admin_dataviz', __name__,
 def show_type_article_stock():
     mycursor = get_db().cursor()
     sql = '''
-    
-           '''
-    mycursor.execute(sql)
+    '''
     datas_show = mycursor.fetchall()
     labels = [str(row['libelle']) for row in datas_show]
     values = [int(row['nbr_articles']) for row in datas_show]

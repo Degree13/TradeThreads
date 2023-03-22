@@ -13,7 +13,10 @@ client_commande = Blueprint('client_commande', __name__,
 def client_commande_valide():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    sql = ''' SELECT * FROM ligne_panier WHERE utilisateur_id = %s '''
+    sql = ''' SELECT ligne_panier.quantite, ligne_panier.prix, designation AS nom 
+    FROM vetement, ligne_panier
+    WHERE vetement_id = id_vetement 
+    AND utilisateur_id = %s '''
     mycursor.execute(sql, id_client)
     articles_panier = mycursor.fetchall()
 
@@ -82,6 +85,10 @@ def client_commande_add():
         tuple_update2 = (id_commande['last_insert_id'], item['vetement_id'], item['prix'], item['quantite'])
         print("this is tupple update2 :", tuple_update2)
         mycursor.execute(sql, tuple_update2)
+
+        # suppression des favoris dans le panier
+        sql = ''' DELETE FROM favoris WHERE vetement_id = %s '''
+        mycursor.execute(sql, item['vetement_id'])
 
     get_db().commit()
     flash(u'Commande ajoutée','alert-success')

@@ -17,7 +17,7 @@ def client_article_details():
     id_article =  request.args.get('id_article', None)
     id_client = session['id_user']
 
-    ## partie 4
+    ## partie 4"""
     client_historique_add(id_article, id_client)
 
     sql = '''

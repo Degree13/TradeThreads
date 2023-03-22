@@ -26,8 +26,16 @@ def client_liste_envies_add():
         mycursor.execute(sql, (id_client, id_article))
         get_db().commit()
     else :
-        sql = ''' INSERT INTO favoris (utilisateur_id, vetement_id) VALUES (%s, %s) '''
-        mycursor.execute(sql, (id_client, id_article))
+        # Take the numver of the favorite highest fav_order where the user is the same
+        sql = ''' SELECT MIN(fav_order) FROM favoris WHERE utilisateur_id = %s '''
+        mycursor.execute(sql, (id_client))
+        fav_max_int = mycursor.fetchone()
+        fav_max_int = fav_max_int['MIN(fav_order)'] - 1
+        print(fav_max_int)
+
+        sql = ''' INSERT INTO favoris (utilisateur_id, vetement_id, fav_order) VALUES (%s, %s, %s) '''
+        mytuple = (id_client, id_article, fav_max_int)
+        mycursor.execute(sql, mytuple)
         get_db().commit()
     return redirect('/client/article/show')
 
@@ -48,8 +56,11 @@ def client_liste_envies_show():
     articles_liste_envies = []
     articles_historique = []
     nb_liste_envies = 0
-    sql = ''' SELECT designation AS nom, id_vetement AS id_article, prix, quantite AS stock, image FROM vetement, favoris 
-    WHERE vetement.id_vetement = favoris.vetement_id AND favoris.utilisateur_id = %s '''
+    sql = ''' SELECT designation AS nom, id_vetement AS id_article, prix, quantite AS stock, image 
+    FROM vetement, favoris 
+    WHERE vetement.id_vetement = favoris.vetement_id 
+    AND favoris.utilisateur_id = %s 
+    ORDER BY fav_order ASC '''
     mycursor.execute(sql, (id_client))
     articles_liste_envies = mycursor.fetchall()
 
@@ -84,5 +95,67 @@ def client_liste_envies_article_move():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     id_article = request.args.get('id_article')
-  
+    # get fav_order of the article
+    sql = ''' SELECT fav_order FROM favoris WHERE utilisateur_id = %s AND vetement_id = %s '''
+    mycursor.execute(sql, (id_client, id_article))
+    fav_order = mycursor.fetchone()
+    fav_order = fav_order['fav_order']
+    print(fav_order)
+    # if client route is up
+    if request.path == '/client/envies/up':
+        # select article that has the previous fav_order
+        sql = ''' SELECT MAX(fav_order) FROM favoris WHERE utilisateur_id = %s AND fav_order < %s '''
+        mycursor.execute(sql, (id_client, fav_order))
+        fav_order_before = mycursor.fetchone()
+        sql = ''' SELECT vetement_id FROM favoris WHERE utilisateur_id = %s AND fav_order = %s '''
+        mycursor.execute(sql, (id_client, fav_order_before['MAX(fav_order)']))
+        fav_order_before = mycursor.fetchone()
+                
+        # update fav_order of the article
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order - 1, id_client, id_article))
+
+        # update fav_order of the article before
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order, id_client, fav_order_before['vetement_id']))
+    
+    if request.path == '/client/envies/down':
+        # select article that has the next fav_order
+        sql = ''' SELECT MIN(fav_order) FROM favoris WHERE utilisateur_id = %s AND fav_order > %s '''
+        mycursor.execute(sql, (id_client, fav_order))
+        fav_order_after = mycursor.fetchone()
+        sql = ''' SELECT vetement_id FROM favoris WHERE utilisateur_id = %s AND fav_order = %s '''
+        mycursor.execute(sql, (id_client, fav_order_after['MIN(fav_order)']))
+        fav_order_after = mycursor.fetchone()
+                
+        # update fav_order of the article
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order + 1, id_client, id_article))
+
+        # update fav_order of the article next
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order, id_client, fav_order_after['vetement_id']))
+
+    if request.path == '/client/envies/last':
+        # get max fav_order
+        sql = ''' SELECT MAX(fav_order) FROM favoris WHERE utilisateur_id = %s '''
+        mycursor.execute(sql, (id_client))
+        fav_order_max = mycursor.fetchone()
+        fav_order_max = fav_order_max['MAX(fav_order)']
+        # update fav_order of the article
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order_max + 1, id_client, id_article))
+    
+    if request.path == '/client/envies/first':
+        # get min fav_order
+        sql = ''' SELECT MIN(fav_order) FROM favoris WHERE utilisateur_id = %s '''
+        mycursor.execute(sql, (id_client))
+        fav_order_min = mycursor.fetchone()
+        fav_order_min = fav_order_min['MIN(fav_order)']
+        # update fav_order of the article
+        sql = ''' UPDATE favoris SET fav_order = %s WHERE utilisateur_id = %s AND vetement_id = %s '''
+        mycursor.execute(sql, (fav_order_min - 1, id_client, id_article))
+
+    
+    get_db().commit()
     return redirect('/client/envies/show')

@@ -57,7 +57,7 @@
 {# #}                                {% endif %}
                                      <div class="col-2 align-content-end">
                                     {% if article.liste_envie is defined %}
-                                         {%if  article.liste_envie== 1%}
+                                         {%if article.liste_envie== 1%}
                                              <a href="/client/envie/add?id_article={{ article.id_article }}" style="text-decoration: none">💛</a>
                                          {% else %}
                                              <a href="/client/envie/add?id_article={{ article.id_article }}" style="text-decoration: none">🤍</a>
