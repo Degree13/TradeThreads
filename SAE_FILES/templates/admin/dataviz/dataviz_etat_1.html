@@ -4,13 +4,15 @@
 {% block javascripts %}
 {#    attention il faut importer la bibliotheque chart.js avant de définir l'objet chart#}
     {{ super() }}
-   {# <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}" ></script>#}
+   {# <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}" ></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> #}
 {% endblock %}
 
 {% block javascripts_head %}
 {#    attention il faut importer la bibliotheque chart.js avant de définir l'objet chart#}
 {#    <script src="{{ url_for('static', filename='chart.js') }}" ></script>#}
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
 {% endblock %}
 
 {% block title %}
@@ -65,6 +67,10 @@
     </div>
     graphique 1
     <script>
+    const colorScale1 = chroma.scale(['#e60073', '#f3c30b', '#008ae6']);
+    const colors1 = colorScale1.colors({{ labels | length }});
+    const colorScale2 = chroma.scale(['#9400D3', '#FE2E2E']);
+    const colors2 = colorScale2.colors({{ labels | length }});
 	var ctx1 = document.getElementById("Chart1").getContext("2d");
 	var Chart1 = new Chart( ctx1, {
   		type: "bar",
@@ -75,10 +81,7 @@
   				label: "Nombre de favoris par article",
   				data: {{ values | safe }},
   				fill: false,
-                 backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850",
-             "#faf24c"
-             , "#6a6ce7","#55f68f","#D0c309","#c45000",
-             "#597e88", "#8108f7", "#f7f708", "#f70808", "#f708f7",],
+                backgroundColor: colors2,
   				borderColor: "rgb(75,192,192)",
   				lineTension: 0.1
   				}
@@ -88,6 +91,35 @@
   			responsive: false
   		}
 	});
+    </script>
+
+    <div style="width: 900px; height: 500px; border: #0a53be 1px solid;">
+        <canvas id="Chart3" ></canvas>
+    </div>
+    graphique 3
+    <script>
+    var ctx3 = document.getElementById("Chart3").getContext("2d");
+    const colorScale3 = chroma.scale(['#9400D3', '#FE2E2E']);
+    const colors3 = colorScale3.colors({{ labels2 | length }});
+    var Chart1 = new Chart( ctx3, {
+        type: "bar",
+        data: {
+            labels: {{ labels2 | safe }},
+            datasets: [
+                {
+                label: "Nombre de vues par article",
+                data: {{ values2 | safe }},
+                fill: false,
+                backgroundColor: colors3,
+                borderColor: "rgb(75,192,192)",
+                lineTension: 0.1
+                }
+            ]
+        },
+        option: {
+            responsive: false
+        }
+    });
     </script>
 
 
@@ -102,10 +134,7 @@
       labels: {{ labels | safe }},
       datasets: [{
         label: "Nombre de favoris par article",
-         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850",
-             "#faf24c"
-             , "#6a6ce7","#55f68f","#D0c309","#c45000",
-             "#597e88", "#8108f7", "#f7f708", "#f70808", "#f708f7",],
+         backgroundColor: colors1,
         data: {{ values | safe }},
       }]
     },

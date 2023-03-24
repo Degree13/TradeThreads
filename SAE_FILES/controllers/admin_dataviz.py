@@ -14,7 +14,8 @@ def show_type_article_stock():
     sql = ''' SELECT v.designation AS libelle, COALESCE(COUNT(f.vetement_id), 0) AS nbr_articles, v.id_vetement
     FROM vetement v
     LEFT JOIN favoris f ON v.id_vetement = f.vetement_id
-    GROUP BY v.designation;
+    GROUP BY v.id_vetement
+    ORDER BY nbr_articles ASC
     '''
     mycursor.execute(sql)
     datas_show = mycursor.fetchall()
@@ -22,11 +23,22 @@ def show_type_article_stock():
     values = [int(row['nbr_articles']) for row in datas_show]
 
 
-    # sql = '''
-    #         
-    #        '''
+    sql = ''' SELECT v.designation AS libelle, COALESCE(SUM(h.nb_consultation), 0) AS nbr_articles, v.id_vetement
+    FROM vetement v
+    LEFT JOIN historique h ON h.vetement_id = v.id_vetement
+    GROUP BY v.id_vetement
+    ORDER BY nbr_articles ASC 
+    '''
+    mycursor.execute(sql)
+    datas_show2 = mycursor.fetchall()
+    labels2 = [str(row['libelle']) for row in datas_show2]
+    values2 = [int(row['nbr_articles']) for row in datas_show2]
+
     return render_template('admin/dataviz/dataviz_etat_1.html'
                            , datas_show=datas_show
+                           , datas_show2=datas_show2
                            , labels=labels
-                           , values=values)
+                           , values=values
+                           , labels2=labels2
+                           , values2=values2)
 
