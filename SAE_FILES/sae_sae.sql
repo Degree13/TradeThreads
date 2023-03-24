@@ -1,5 +1,5 @@
 # Suppression tables
-DROP TABLE IF EXISTS  favoris, ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
+DROP TABLE IF EXISTS  historique, favoris, ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
 
 # enlevez marque et fournisseur
 # Creation tables
@@ -95,6 +95,17 @@ CREATE TABLE favoris(
     CONSTRAINT fk_utilisateur_favoris FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     CONSTRAINT fk_vetement_favoris FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
+
+CREATE TABLE historique(
+    utilisateur_id INT,
+    vetement_id INT,
+    date_achat DATETIME,
+    nb_consultation INT,
+    PRIMARY KEY (utilisateur_id, vetement_id),
+    CONSTRAINT fk_utilisateur_historique FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    CONSTRAINT fk_vetement_historique FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
+);
+
 
 # table panier à faire pour une sauvegarde permanente
 # table facturation à faire
@@ -194,9 +205,37 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, prix, date_ajout
 INSERT INTO favoris(utilisateur_id, vetement_id, fav_order) VALUES
 (1, 2, 1),
 (1, 13, 2),
-(2, 8, 1),
-(2, 4, 2),
-(3, 7, 1);
+(1, 8, 3),
+(2, 4, 1),
+(2, 7, 2),
+(3, 9, 3),
+(3, 6, 4),
+(3, 1, 5),
+(3, 5, 6),
+(3, 10, 7),
+(3, 12, 8),
+(3, 14, 9),
+(3, 3, 10),
+(3, 4, 11),
+(3, 13, 27),
+(3, 2, 28),
+(3, 8, 29),
+(3, 7, 30),
+(3, 11, 31),
+(4, 11, 32),
+(4, 7, 33),
+(4, 8, 34),
+(4, 2, 35),
+(4, 13, 36),
+(4, 10, 37),
+(4, 12, 38);
+
+INSERT INTO historique(utilisateur_id, vetement_id, date_achat, nb_consultation) VALUES
+(1, 2, '2023-02-23T14:25:10', 1),
+(1, 13, '2023-02-23T15:27:10', 2),
+(2, 8, '2022-02-23T16:25:10', 3),
+(2, 4, '2023-02-23T10:25:10', 1),
+(3, 7, '2023-02-23T9:25:10', 1);
 
 # Verif table
 
@@ -209,6 +248,8 @@ DESCRIBE couleur;
 DESCRIBE vetement;
 DESCRIBE ligne_commande;
 DESCRIBE ligne_panier;
+DESCRIBE favoris;
+DESCRIBE historique;
 
 # Verif contenus table
 
@@ -221,3 +262,5 @@ SELECT * FROM couleur;
 SELECT * FROM vetement;
 SELECT * FROM ligne_commande;
 SELECT * FROM ligne_panier;
+SELECT * FROM favoris;
+SELECT * FROM historique;

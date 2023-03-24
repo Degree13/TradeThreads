@@ -23,7 +23,7 @@
 <table class="table">
     <thead class="thead-dark">
         <tr>
-           <th>xxxxxxxxxx</th> <th>(id)</th><th>x</th>
+           <th>Liste des articles</th> <th>(id)</th><th>NB fav</th>
         </tr>
     </thead>
     <tbody>
@@ -31,10 +31,10 @@
         {% for ligne in datas_show %}
            <tr>
                   <td>{{ ligne.libelle }}</td>
-                  <td>{{ ligne.xxxxx }}</td>
+                  <td>{{ ligne.id_vetement }}</td>
                    <td><span style="color: red">
-                       {% if ligne.xxxxxx is not none %}
-                           {{ ligne.xxxxxx }}
+                       {% if ligne.nbr_articles is not none %}
+                           {{ ligne.nbr_articles }}
                        {% else %}
                            pas d'article
                        {% endif %}
@@ -72,12 +72,13 @@
   			labels: {{ labels | safe }},
   			datasets: [
   				{
-  				label: "xxxxxxxxxxxxxxx)",
+  				label: "Nombre de favoris par article",
   				data: {{ values | safe }},
   				fill: false,
                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850",
              "#faf24c"
-             , "#6a6ce7","#55f68f","#D0c309","#c45000"],
+             , "#6a6ce7","#55f68f","#D0c309","#c45000",
+             "#597e88", "#8108f7", "#f7f708", "#f70808", "#f708f7",],
   				borderColor: "rgb(75,192,192)",
   				lineTension: 0.1
   				}
@@ -100,17 +101,18 @@
     data: {
       labels: {{ labels | safe }},
       datasets: [{
-        label: "xxxxxxxxxxxx",
+        label: "Nombre de favoris par article",
          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850",
              "#faf24c"
-             , "#6a6ce7","#55f68f","#D0c309","#c45000"],
+             , "#6a6ce7","#55f68f","#D0c309","#c45000",
+             "#597e88", "#8108f7", "#f7f708", "#f70808", "#f708f7",],
         data: {{ values | safe }},
       }]
     },
     options: {
       title: {
         display: true,
-        text: 'Type article : nombre'
+        text: 'Articles : nombre de favoris'
       }
      }
     });

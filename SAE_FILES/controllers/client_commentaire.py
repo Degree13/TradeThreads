@@ -20,12 +20,16 @@ def client_article_details():
     ## partie 4"""
     client_historique_add(id_article, id_client)
 
-    sql = '''
+    
+    sql = ''' SELECT designation AS nom, id_vetement AS id_article, prix, quantite AS stock, image 
+    FROM vetement
+    WHERE id_vetement = %s
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
     if article is None:
         abort(404, "pb id article")
+    """
     sql = '''
 
     '''
@@ -46,6 +50,11 @@ def client_article_details():
     '''
     mycursor.execute(sql, (id_client, id_article))
     nb_commentaires = mycursor.fetchone()
+    """
+    commentaires = []
+    commandes_articles = None
+    note = None
+    nb_commentaires = None
     return render_template('client/article_info/article_details.html'
                            , article=article
                            , commentaires=commentaires
