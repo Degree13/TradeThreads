@@ -122,6 +122,33 @@
     });
     </script>
 
+    <div style="width: 900px; height: 500px; border: #0a53be 1px solid;">
+        <canvas id="Chart4" ></canvas>
+    </div>
+    graphique 4
+    <script>
+    var ctx3 = document.getElementById("Chart4").getContext("2d");
+    var Chart1 = new Chart( ctx3, {
+        type: "line",
+        data: {
+            labels: {{ labels3 | safe }},
+            datasets: [
+                {
+                label: "Valeur total des articles en favoris",
+                data: {{ values3 | safe }},
+                fill: false,
+                backgroundColor: colors3,
+                borderColor: "rgb(75,192,192)",
+                lineTension: 0.1
+                }
+            ]
+        },
+        option: {
+            responsive: false
+        }
+    });
+    </script>
+
 
     <h2>demo graphique à secteurs : "camenberd" ,"donut" ( "pie-chart"  "doughtnut")</h2>
 

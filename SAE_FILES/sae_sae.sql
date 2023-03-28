@@ -1,5 +1,5 @@
 # Suppression tables
-DROP TABLE IF EXISTS  historique, favoris, ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
+DROP TABLE IF EXISTS  hist_prix, historique, favoris, ligne_panier, ligne_commande, vetement, couleur, type_vetement, taille, commande, etat, utilisateur;
 
 # enlevez marque et fournisseur
 # Creation tables
@@ -106,6 +106,11 @@ CREATE TABLE historique(
     CONSTRAINT fk_vetement_historique FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
+CREATE TABLE hist_prix(
+    date_prix DATETIME,
+    prix NUMERIC(7,2),
+    PRIMARY KEY (date_prix)
+);
 
 # table panier à faire pour une sauvegarde permanente
 # table facturation à faire
@@ -236,6 +241,19 @@ INSERT INTO historique(utilisateur_id, vetement_id, date_achat, nb_consultation)
 (2, 8, '2022-02-23T16:25:10', 3),
 (2, 4, '2023-02-23T10:25:10', 1),
 (3, 7, '2023-02-23T9:25:10', 1);
+
+INSERT INTO hist_prix(date_prix, prix) VALUES
+('2023-02-23T14:25:10', 1550),
+('2023-02-23T15:27:10', 1976),
+('2022-02-23T16:25:10', 2465),
+('2023-02-23T10:25:10', 3149),
+('2023-02-23T9:25:10', 2103),
+('2023-03-12T10:25', 3216),
+('2023-03-13T11:25', 4216),
+('2023-04-14T12:25', 6216),
+('2023-05-15T13:25', 7216),
+('2023-06-16T14:25', 3216),
+('2023-07-17T15:25', 4216);
 
 # Verif table
 
