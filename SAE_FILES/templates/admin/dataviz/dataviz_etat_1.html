@@ -67,6 +67,9 @@
     </div>
     graphique 1
     <script>
+    console.log("labels:", {{ labels | safe }});
+    console.log("values:", {{ values | safe }});
+
     const colorScale1 = chroma.scale(['#e60073', '#f3c30b', '#008ae6']);
     const colors1 = colorScale1.colors({{ labels | length }});
     const colorScale2 = chroma.scale(['#9400D3', '#FE2E2E']);
@@ -87,9 +90,16 @@
   				}
   			]
   		},
-  		option: {
-  			responsive: false
-  		}
+  		options: {
+  			responsive: true,
+            scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+            }
+  	    }
 	});
     </script>
 
@@ -116,9 +126,16 @@
                 }
             ]
         },
-        option: {
-            responsive: false
-        }
+        options: {
+  			responsive: true,
+            scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+            }
+  	    }
     });
     </script>
 
