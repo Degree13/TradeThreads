@@ -27,7 +27,7 @@ def client_liste_envies_add():
         mycursor.execute(sql, (id_client, id_article))
         get_db().commit()
     else :
-        # Take the numver of the favorite highest fav_order where the user is the same
+        # Take the number of the favorite highest fav_order where the user is the same
         sql = ''' SELECT MIN(fav_order) FROM favoris WHERE utilisateur_id = %s '''
         mycursor.execute(sql, (id_client))
         fav_max_int = mycursor.fetchone()
