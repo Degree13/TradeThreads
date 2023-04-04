@@ -98,16 +98,12 @@ def client_article_show():                                 # remplace client_ind
               "WHERE utilisateur_id = %s"
         mycursor.execute(sql, (id_client,))
         prix = mycursor.fetchall()
+        print("prix:", prix)
         prix_total = 0
         for elem in prix:
             prix_total += elem["prix_total"]
     else:
         prix_total = None
-
-    # Count the number of favoris
-    #sql = ''' COUNT id_article AS liste_envie FROM favoris WHERE id_client = %s '''
-    #mycursor.execute(sql, (id_client,))
-    #TODO a finir
 
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
