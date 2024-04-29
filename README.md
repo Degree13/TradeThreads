@@ -17,5 +17,3 @@ A backend development exercise for an e-commerce website, including the followin
 - Order status visualization
 - Article modification
 - Addition of articles and categories
-
-When I'll find back the password to the DTB of this project I'll post screenshots here
